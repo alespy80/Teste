@@ -267,3 +267,78 @@ main{max-width:860px;margin:0 auto;padding:1.5rem}
   padding: .6rem 0; border-bottom: 1px solid rgba(255,255,255,.05);
 }
 .pr-item:last-child { border: none; }
+
+/* ══ INTRO SCREEN ══ */
+.intro-screen {
+  position: fixed; inset: 0; z-index: 999;
+  background: #06060f;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.intro-screen.saindo {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-inner { position: relative; z-index: 1; }
+
+/* glow de fundo */
+.intro-screen::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 40%, rgba(99,102,241,.2) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(99,102,241,.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.intro-cidade {
+  font-size: .72rem; font-weight: 800;
+  letter-spacing: .35em; text-transform: uppercase;
+  color: #6366f1; margin-bottom: .75rem;
+  opacity: .8;
+}
+
+.intro-logo {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(5rem, 20vw, 9rem);
+  font-weight: 900;
+  color: #f8fafc;
+  letter-spacing: -.04em;
+  line-height: 1;
+  text-shadow: 0 0 80px rgba(99,102,241,.5), 0 0 160px rgba(99,102,241,.2);
+  animation: glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { text-shadow: 0 0 60px rgba(99,102,241,.4), 0 0 120px rgba(99,102,241,.15); }
+  50%      { text-shadow: 0 0 100px rgba(99,102,241,.7), 0 0 200px rgba(99,102,241,.3); }
+}
+
+.intro-linha {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, transparent, #6366f1, transparent);
+  margin: 1.25rem auto;
+}
+
+.intro-sub {
+  font-size: .8rem; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: #334155; margin-bottom: 2.5rem;
+}
+
+.intro-btn {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: #6366f1; color: #fff;
+  padding: .9rem 2.2rem; border-radius: 50px;
+  font-size: .9rem; font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase;
+  border: none; cursor: pointer; font-family: inherit;
+  box-shadow: 0 0 30px rgba(99,102,241,.5);
+  transition: all .25s;
+}
+.intro-btn:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(99,102,241,.7); }
+
+/* APP oculto até iniciar */
+.app-oculto { display: none; }
+.app-visivel { display: block; }
