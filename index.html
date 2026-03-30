@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smell — Check-in de Alunos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">Smell <span>Check-in</span></div>
+      <div class="header-data" id="header-data"></div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ABAS -->
+    <div class="abas">
+      <button class="aba ativa" data-aba="checkin" onclick="trocarAba('checkin')">Check-in</button>
+      <button class="aba" data-aba="alunos" onclick="trocarAba('alunos')">Alunos</button>
+      <button class="aba" data-aba="historico" onclick="trocarAba('historico')">Histórico</button>
+    </div>
+
+    <!-- ABA: CHECK-IN -->
+    <div class="painel ativa" id="painel-checkin">
+
+      <!-- ALERTAS DE EXCLUSÃO -->
+      <div id="alertas-exclusao"></div>
+
+      <div class="card">
+        <div class="card-titulo">Registrar Presença</div>
+        <div class="campo">
+          <label>Aluno</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="ci-busca" placeholder="Digite o nome do aluno..." autocomplete="off" oninput="filtrarAlunos()" onfocus="filtrarAlunos()" />
+            <div class="autocomplete-lista" id="autocomplete-lista"></div>
+          </div>
+          <input type="hidden" id="ci-aluno" />
+        </div>
+        <div class="campo">
+          <label>Tipo</label>
+          <div class="radio-group">
+            <label class="radio-opt radio-presente">
+              <input type="radio" name="ci-tipo" value="presente" checked />
+              <span>✓ Presente</span>
+            </label>
+            <label class="radio-opt radio-falta">
+              <input type="radio" name="ci-tipo" value="falta" />
+              <span>✗ Falta</span>
+            </label>
+            <label class="radio-opt radio-justificada">
+              <input type="radio" name="ci-tipo" value="justificada" />
+              <span>📋 Justificada</span>
+            </label>
+          </div>
+        </div>
+        <div class="campo" id="campo-obs" style="display:none">
+          <label>Observação</label>
+          <input type="text" id="ci-obs" placeholder="Motivo da falta ou observação" />
+        </div>
+        <button class="btn-prim" onclick="registrarCheckin()">Registrar Check-in</button>
+      </div>
+
+      <!-- LISTA DO DIA -->
+      <div class="card">
+        <div class="card-titulo">Registros de Hoje</div>
+        <div id="lista-hoje"></div>
+      </div>
+
+    </div>
+
+    <!-- ABA: ALUNOS -->
+    <div class="painel" id="painel-alunos">
+
+      <div class="card">
+        <div class="card-titulo">Cadastrar Aluno</div>
+        <div class="form-grid">
+          <div class="campo">
+            <label>Nome completo</label>
+            <input type="text" id="al-nome" placeholder="Nome do aluno" />
+          </div>
+          <div class="campo">
+            <label>Telefone</label>
+            <input type="tel" id="al-tel" placeholder="(21) 99999-9999" />
+          </div>
+          <div class="campo">
+            <label>Plano</label>
+            <select id="al-plano">
+              <option value="2x">2x por semana</option>
+              <option value="3x">3x por semana</option>
+              <option value="5x">5x por semana</option>
+              <option value="online">Online</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Data de início</label>
+            <input type="date" id="al-inicio" />
+          </div>
+        </div>
+        <button class="btn-prim" onclick="cadastrarAluno()">Cadastrar Aluno</button>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Alunos Cadastrados</div>
+        <div class="busca-wrap">
+          <input type="text" id="busca-aluno" placeholder="Buscar aluno..." oninput="renderAlunos()" />
+        </div>
+        <div id="lista-alunos"></div>
+      </div>
+
+    </div>
+
+    <!-- ABA: HISTÓRICO -->
+    <div class="painel" id="painel-historico">
+      <div class="card">
+        <div class="card-titulo">Histórico de Registros</div>
+        <div class="filtros">
+          <select id="filtro-aluno" onchange="renderHistorico()">
+            <option value="">Todos os alunos</option>
+          </select>
+          <select id="filtro-tipo" onchange="renderHistorico()">
+            <option value="">Todos os tipos</option>
+            <option value="presente">Presentes</option>
+            <option value="falta">Faltas</option>
+            <option value="justificada">Justificadas</option>
+          </select>
+          <input type="month" id="filtro-mes" onchange="renderHistorico()" />
+        </div>
+        <div id="lista-historico"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL CONFIRMAÇÃO EXCLUSÃO -->
+  <div class="modal-overlay" id="modal-overlay" onclick="fecharModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-titulo">⚠️ Confirmar Exclusão</div>
+      <div class="modal-texto" id="modal-texto"></div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-danger" id="modal-confirmar">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PERFIL DO ALUNO -->
+  <div class="modal-overlay" id="modal-perfil" onclick="fecharPerfil()">
+    <div class="modal modal-perfil" onclick="event.stopPropagation()">
+      <button class="modal-fechar" onclick="fecharPerfil()">✕</button>
+      <div id="perfil-conteudo"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
