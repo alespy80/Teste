@@ -355,7 +355,7 @@ document.addEventListener("keydown", e => {
 // ── HELPERS ──
 function tipoLabel(t) { return { presente:"Presente", falta:"Falta", justificada:"Justificada" }[t] || t; }
 function tipoIcone(t) { return { presente:"✓", falta:"✗", justificada:"📋" }[t] || "?"; }
-function planoLabel(p){ return { "2x":"2x/semana", "3x":"3x/semana", "5x":"5x/semana", "online":"Online" }[p] || p; }
+function planoLabel(p){ return { "2x":"2x/semana", "3x":"3x/semana", "5x":"5x/semana" }[p] || p; }
 function formatarData(d) {
   if (!d) return "—";
   const [y,m,dia] = d.split("-");
@@ -496,4 +496,16 @@ function ultimos6Meses() {
     });
   }
   return meses;
+}
+
+// ── INTRO ──
+function iniciarApp() {
+  const intro = document.getElementById("intro-screen");
+  const app   = document.getElementById("app-wrap");
+  intro.classList.add("saindo");
+  setTimeout(() => {
+    intro.style.display = "none";
+    app.classList.remove("app-oculto");
+    app.classList.add("app-visivel");
+  }, 500);
 }
